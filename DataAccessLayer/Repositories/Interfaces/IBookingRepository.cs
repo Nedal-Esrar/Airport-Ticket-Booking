@@ -1,4 +1,5 @@
 using DataAccessLayer.Models;
+using DataAccessLayer.SearchCriteria;
 
 namespace DataAccessLayer.Repositories.Interfaces;
 
