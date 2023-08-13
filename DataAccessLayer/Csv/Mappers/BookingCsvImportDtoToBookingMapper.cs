@@ -1,5 +1,6 @@
 using DataAccessLayer.Csv.Dtos;
 using DataAccessLayer.Models;
+using DataAccessLayer.Repositories.Interfaces;
 
 namespace DataAccessLayer.Csv.Mappers;
 
