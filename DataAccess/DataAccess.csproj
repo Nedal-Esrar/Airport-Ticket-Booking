@@ -4,12 +4,19 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>DataAccessLayer</RootNamespace>
+
     </PropertyGroup>
 
 
-    <ItemGroup>
-      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    </ItemGroup>
+
+
+
+
+
+
+
+
 
 
 
