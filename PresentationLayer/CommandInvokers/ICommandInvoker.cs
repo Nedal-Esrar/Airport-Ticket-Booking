@@ -2,5 +2,5 @@ namespace PresentationLayer.CommandInvokers;
 
 public interface ICommandInvoker
 {
-  void Invoke(int choice);
+  Task Invoke(int choice);
 }

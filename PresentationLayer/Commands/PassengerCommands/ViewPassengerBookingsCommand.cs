@@ -17,9 +17,9 @@ public class ViewPassengerBookingsCommand : ICommand
     _passenger = passenger;
   }
   
-  public void Execute()
+  public async Task Execute()
   {
-    var passengerBookings = _bookingService.GetPassengerBookings(_passenger.Id);
+    var passengerBookings = await _bookingService.GetPassengerBookings(_passenger.Id);
 
     if (passengerBookings.Any())
     {

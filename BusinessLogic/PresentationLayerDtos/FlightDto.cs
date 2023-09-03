@@ -1,4 +1,4 @@
-using DataAccessLayer.Models;
+using DataAccess.Models;
 
 namespace BusinessLogic.PresentationLayerDtos;
 
@@ -17,26 +17,6 @@ public class FlightDto
   public string ArrivalAirport { get; init; }
 
   public IList<FlightClassDetailsDto> Classes { get; init; }
-
-  public FlightDto(Flight flight)
-  {
-    Id = flight.Id;
-
-    DepartureCountry = flight.DepartureCountry;
-
-    DestinationCountry = flight.DestinationCountry;
-
-    DepartureDate = flight.DepartureDate;
-
-    DepartureAirport = flight.DepartureAirport;
-
-    ArrivalAirport = flight.ArrivalAirport;
-
-    Classes = flight
-      .Classes
-      .Select(details => new FlightClassDetailsDto(details))
-      .ToList();
-  }
   
   public override string ToString() =>
     $"""

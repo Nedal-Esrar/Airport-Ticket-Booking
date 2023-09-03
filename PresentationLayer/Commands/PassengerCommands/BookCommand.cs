@@ -1,6 +1,6 @@
 using BusinessLogic.PresentationLayerDtos;
 using BusinessLogic.Services.Interfaces;
-using DataAccessLayer.Models;
+using DataAccess.Models;
 using PresentationLayer.DisplayUtilities;
 using PresentationLayer.InputUtilities;
 
@@ -23,14 +23,14 @@ public class BookCommand : ICommand
     _passenger = passenger;
   }
   
-  public void Execute()
+  public async Task Execute()
   {
     Console.WriteLine(FlightMessages.EnterFlightId);
     
     var flightId = InputParser.GetInput<int>(FlightMessages.FlightIdPromptWithoutSkip,
       ParseFunctionsWithoutSkip.TryParseId);
 
-    var flight = _flightService.GetById(flightId);
+    var flight = await _flightService.GetById(flightId);
 
     if (flight == null)
     {
@@ -51,7 +51,7 @@ public class BookCommand : ICommand
       return;
     }
 
-    var isBookingSuccessful = _bookingService.BookFlight(flight.Id, _passenger.Id, flightClass);
+    var isBookingSuccessful = await _bookingService.BookFlight(flight.Id, _passenger.Id, flightClass);
 
     Console.WriteLine(isBookingSuccessful
       ? BookingMessages.SuccessfulBooking

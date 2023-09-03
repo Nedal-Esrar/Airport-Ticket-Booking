@@ -1,4 +1,4 @@
-using DataAccessLayer.Models;
+using DataAccess.Models;
 
 namespace BusinessLogic.PresentationLayerDtos;
 
@@ -13,19 +13,6 @@ public class BookingDto
   public FlightClass BookingClass { get; init; }
   
   public DateTime BookingDate { get; init; }
-
-  public BookingDto(Booking booking)
-  {
-    Id = booking.Id;
-
-    Passenger = new PassengerDto(booking.Passenger);
-
-    Flight = new FlightDto(booking.Flight);
-
-    BookingClass = booking.BookingClass;
-
-    BookingDate = booking.BookingDate;
-  }
   
   public override string ToString() =>
     $"""

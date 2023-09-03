@@ -1,6 +1,6 @@
 using BusinessLogic.PresentationLayerDtos;
 using BusinessLogic.Services.Interfaces;
-using DataAccessLayer.Models;
+using DataAccess.Models;
 using PresentationLayer.DisplayUtilities;
 using PresentationLayer.InputUtilities;
 
@@ -19,23 +19,23 @@ public class ModifyBookingCommand : ICommand
     _passenger = passenger;
   }
 
-  public void Execute()
+  public async Task Execute()
   {
     Console.WriteLine(BookingMessages.EnterBookingId);
     
     var bookingId = InputParser.GetInput<int>(InputPrompts.BookingIdPromptWithoutSkip,
       ParseFunctionsWithoutSkip.TryParseId);
 
-    var booking = _bookingService.GetById(bookingId);
+    var booking = await _bookingService.GetById(bookingId);
 
     if (booking == null)
     {
       Console.WriteLine(BookingMessages.BookingDoesNotExist);
     }
+
+    var passengerBookings = await _bookingService.GetPassengerBookings(_passenger.Id);
     
-    var doesBookingBelongToPassenger = _bookingService
-      .GetPassengerBookings(_passenger.Id)
-      .Any(booking => booking.Passenger.Id == _passenger.Id);
+    var doesBookingBelongToPassenger = passengerBookings.Any(booking => booking.Passenger.Id == _passenger.Id);
 
     if (!doesBookingBelongToPassenger)
     {
@@ -47,7 +47,7 @@ public class ModifyBookingCommand : ICommand
     var flightClass = InputParser.GetInput<FlightClass>(FlightMessages.FlightClassPromptWithoutSkip,
       ParseFunctionsWithoutSkip.TryParseEnum);
 
-    var bookingModifiedSuccessfully = _bookingService.ModifyBooking(bookingId, flightClass);
+    var bookingModifiedSuccessfully = await _bookingService.ModifyBooking(bookingId, flightClass);
 
     Console.WriteLine(bookingModifiedSuccessfully
       ? BookingMessages.BookingModifiedSuccessfully

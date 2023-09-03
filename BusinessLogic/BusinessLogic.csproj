@@ -8,8 +8,16 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+
+
+
+
     </ItemGroup>
+
+
+
+
 
 
 

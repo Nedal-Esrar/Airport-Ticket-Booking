@@ -1,10 +1,12 @@
 using BusinessLogic.PresentationLayerDtos;
 using BusinessLogic.Services.Interfaces;
-using DataAccessLayer.Csv.CsvImportService;
-using DataAccessLayer.Csv.Dtos;
-using DataAccessLayer.Models;
-using DataAccessLayer.Repositories.Interfaces;
-using DataAccessLayer.SearchCriteria;
+using BusinessLogic.Utilites;
+using DataAccess.Csv.CsvImportService;
+using DataAccess.Csv.Dtos;
+using DataAccess.Csv.Mappers;
+using DataAccess.Models;
+using DataAccess.Repositories.Interfaces;
+using DataAccess.SearchCriteria;
 
 namespace BusinessLogic.Services.Implementations;
 
@@ -16,10 +18,13 @@ public class FlightService : IFlightService
 
   private readonly IImportFromCsvService<FlightCsvImportDto, Flight> _importFromCsvService;
 
+  private readonly IMapper<Flight, FlightDto> _flightMapper;
+
   public FlightService(
     IFlightRepository flightRepository, 
     IBookingRepository bookingRepository, 
-    IImportFromCsvService<FlightCsvImportDto, Flight> importFromCsvService
+    IImportFromCsvService<FlightCsvImportDto, Flight> importFromCsvService,
+    IMapper<Flight, FlightDto> flightMapper
   )
   {
     _flightRepository = flightRepository;
@@ -27,56 +32,38 @@ public class FlightService : IFlightService
     _bookingRepository = bookingRepository;
 
     _importFromCsvService = importFromCsvService;
+
+    _flightMapper = flightMapper;
   }
 
-  public FlightDto? GetById(int id)
+  public async Task<FlightDto?> GetById(int id)
   {
-    var flight = _flightRepository.GetById(id);
+    var flight = await _flightRepository.GetById(id);
 
-    return flight == null ? null : new FlightDto(flight);
+    return _flightMapper.Map(flight);
   }
 
-  public IEnumerable<FlightDto> GetAvailableFlightsMatchingCriteria(FlightSearchCriteria criteria)
+  public async Task<IEnumerable<FlightDto>> GetAvailableFlightsMatchingCriteria(FlightSearchCriteria criteria)
   {
-    var flightMatchingCriteria = _flightRepository.GetMatchingCriteria(criteria);
+    var flightMatchingCriteria = await _flightRepository.GetMatchingCriteria(criteria);
 
-    if (criteria.Class is null)
-    {
-      return flightMatchingCriteria
-        .Where(flight => flight
-          .Classes
-          .Any(details => IsClassAvailableToBook(flight, details.Class)))
-        .Select(flight => new FlightDto(flight));
-    }
+    var availableFlightsMatchingCriteria = criteria.Class is null
+      ? flightMatchingCriteria.Where(flight => flight.Classes
+        .Any(details => FlightUtilities.IsClassAvailableToBook(flight, details.Class, _bookingRepository).Result))
+      : flightMatchingCriteria.Where(flight => FlightUtilities.IsClassAvailableToBook(flight, criteria.Class.Value, _bookingRepository).Result);
 
-    return flightMatchingCriteria
-      .Where(flight => IsClassAvailableToBook(flight, (FlightClass) criteria.Class))
-      .Select(flight => new FlightDto(flight));
-  }
-  
-  private bool IsClassAvailableToBook(Flight bookingFlight, FlightClass newClass)
-  {
-    var capacity = bookingFlight
-      .Classes
-      .First(details => details.Class == newClass)
-      .Capacity;
-
-    var bookedSeats = _bookingRepository
-      .GetBookingsForFlightWithClass(bookingFlight.Id, newClass)
-      .Count();
-
-    return capacity - bookedSeats > 0;
+    return availableFlightsMatchingCriteria.Select(flight => _flightMapper.Map(flight));
   }
 
-  public IList<string> ImportFromCsv(string filePath)
+  public async Task<IList<string>> ImportFromCsv(string filePath)
   {
-    var importResult = _importFromCsvService.ImportFromCsv(filePath);
+    var importResult = await _importFromCsvService.ImportFromCsv(filePath);
     
-    _flightRepository.Add(importResult
+    await _flightRepository.Add(importResult
       .ValidObjects
       .DistinctBy(flight => flight.Id)
     );
-
+    
     return importResult.ValidationErrors;
   }
 }

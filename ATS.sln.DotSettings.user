@@ -1,0 +1,66 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0c8a7f0a_002Dab13_002D4de5_002D8d49_002Df5cfc603982d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Parse_NoOfAttributesDoesNotMatchTheRequired_ShouldReturnNull #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.PassengerCsvImportDtoParserTests.Parse_NoOfAttributesDoesNotMatchTheRequired_ShouldReturnNull&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=35f5c1db_002D7b2e_002D4186_002Db311_002Deca756b7ba39/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Parse_NoOfAttributesDoesNotMatchTheRequired_ShouldReturnNull #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.PassengerCsvImportDtoParserTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.BookingCsvImportDtoParserTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.FlightCsvImportDtoParserTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Validators.ValidatorTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.PassengerCsvImportDtoToPassengerMapperTests.Map_PassengerCsvImportDto_ShouldReturnTheExpectedPassenger&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.FlightCsvImportDtoToFlightMapperTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.BookingCsvImportDtoToBookingTests.Map_ValidatedBookingCsvImportDtoDoesNotObeysReferentialIntegrity_ShouldThrowIntegrityException&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.BookingCsvImportDtoToBookingTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.BookingCsvImportDtoToBookingMapperTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.PassengerCsvImportDtoToPassengerMapperTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=93d6681f_002D1628_002D4230_002Db28d_002D7a53996b7ed0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Parse_NoOfAttributesDoesNotMatchTheRequired_ShouldReturnNull #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Project Location="/home/nedalesrar/Desktop/Airport-Ticket-Booking/DataAccess.Tests" Presentation="&amp;lt;DataAccess.Tests&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad8f50e2_002D6ade_002D4ea9_002D9c44_002Da057a6d56d7c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="BookFlight_FlightExistsButClassDoesNot_ShouldReturnFalse" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Or&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Services.BookingServiceTests&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.BookingCsvImportDtoParserTests.Parse_NoOfAttributesMatchTheRequired_ShouldAssignNullToTheInvalidDataAndAssignValidData&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.FlightCsvImportDtoParserTests.Parse_NoOfAttributesMatchTheRequired_ShouldAssignNullToTheInvalidDataAndAssignValidData&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Parsers.PassengerCsvImportDtoParserTests.Parse_NoOfAttributesMatchTheRequired_ShouldAssignNullToTheInvalidDataAndAssignValidData&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+    &lt;Project Location="/home/nedalesrar/Desktop/Airport-Ticket-Booking/BusinessLogic.Tests" Presentation="&amp;lt;BusinessLogic.Tests&amp;gt;" /&gt;
+    &lt;Project Location="/home/nedalesrar/Desktop/Airport-Ticket-Booking/DataAccess.Tests" Presentation="&amp;lt;DataAccess.Tests&amp;gt;" /&gt;
+  &lt;/Or&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cbb1e0f5_002Ddf02_002D4fb7_002Db3a9_002Dc285b2e3f9e0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetErrorMessages_Objects_ShouldReturnExpectedListOfErrors" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Validators.ValidatorTests.GetErrorMessages_Objects_ShouldReturnExpectedListOfErrors&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_FileDoesNotExists_ShouldThrowFileNotFoundException&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_NotACsvFile_ShouldNotACsvFileException&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.Mappers.BookingCsvImportDtoToBookingMapperTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_InvalidObjects_ShouldReturnCorrespondingErrorMessages&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_InvalidObjects_ValidatorsGetErrorMessagesShouldBeCalled&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_ReferentialIntegrityFails_ShouldReturnAMessageIndicatingThat&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_ReferentialIntegrityFails_MapperMapShouldBeCalledByTheNoOfFailingObjects&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::4E57401B-6457-4EF1-BA31-FAE382DE64BE::net7.0::DataAccess.Tests.Csv.CsvImportService.CsvImportServiceTests.ImportFromCsv_InvalidObjects_MappersMapShouldBeCalledByTheNumberOfValidObject&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f707432f_002De025_002D4fcb_002Db235_002D980c4cdedb52/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Parse_NoOfAttributesDoesNotMatchTheRequired_ShouldReturnNull" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Or&gt;
+    &lt;Project Location="/home/nedalesrar/Desktop/Airport-Ticket-Booking/DataAccess.Tests" Presentation="&amp;lt;DataAccess.Tests&amp;gt;" /&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.PassengerToPassengerDtoMapperTests&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.FlightClassDetailsToFlightClassDetailsDtoMapperTests&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.FlightToFlightDtoMapperTests.Map_Flight_ShouldReturnDtoWithExpectedFlight&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.FlightToFlightDtoMapperTests&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.BookingToBookingDtoMapperTests.Map_Booking_ShouldReturnDtoWithExpectedBooking&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Mappers.BookingToBookingDtoMapperTests.Map_Null_ShouldReturnNull&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Utilites.FlightUtilitiesTests.IsClassAvailableToBook_ClassAvailable_ReturnsTrue&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::D09A3023-6FAF-492E-948F-988E06D34C52::net7.0::BusinessLogic.Tests.Utilites.FlightUtilitiesTests&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+    &lt;Project Location="/home/nedalesrar/Desktop/Airport-Ticket-Booking/BusinessLogic.Tests" Presentation="&amp;lt;BusinessLogic.Tests&amp;gt;" /&gt;
+  &lt;/Or&gt;
+&lt;/SessionState&gt;</s:String>
+	
+	</wpf:ResourceDictionary>

@@ -1,13 +1,13 @@
 using BusinessLogic.PresentationLayerDtos;
-using DataAccessLayer.SearchCriteria;
+using DataAccess.SearchCriteria;
 
 namespace BusinessLogic.Services.Interfaces;
 
 public interface IFlightService
 {
-  FlightDto? GetById(int id);
+  Task<FlightDto?> GetById(int id);
   
-  IEnumerable<FlightDto> GetAvailableFlightsMatchingCriteria(FlightSearchCriteria criteria);
+  Task<IEnumerable<FlightDto>> GetAvailableFlightsMatchingCriteria(FlightSearchCriteria criteria);
 
-  IList<string> ImportFromCsv(string pathToFile);
+  Task<IList<string>> ImportFromCsv(string pathToFile);
 }
