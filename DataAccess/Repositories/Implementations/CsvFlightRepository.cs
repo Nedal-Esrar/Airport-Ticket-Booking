@@ -9,41 +9,45 @@ namespace DataAccess.Repositories.Implementations;
 
 public class CsvFlightRepository : IFlightRepository
 {
-  private const string PathToCsv = "../../../../DataAccess/CsvFiles/flights.csv";
-
+  public readonly string PathToCsv = "../../../../DataAccess/CsvFiles/flights.csv";
+  
   private readonly IImportFromCsvService<FlightCsvImportDto, Flight> _importFromCsvService;
-
-  private readonly CsvWriter<Flight> _writer;
-
-  public CsvFlightRepository(IImportFromCsvService<FlightCsvImportDto, Flight> importFromCsvService)
+  
+  private readonly ICsvWriter _writer;
+  
+  public CsvFlightRepository(IImportFromCsvService<FlightCsvImportDto, Flight> importFromCsvService, ICsvWriter writer)
   {
     _importFromCsvService = importFromCsvService;
-    
-    _writer = new CsvWriter<Flight>(PathToCsv);
-  }
 
-  public IEnumerable<Flight> GetAll()
+    _writer = writer;
+  }
+  
+  public async Task<IEnumerable<Flight>> GetAll()
   {
-    return _importFromCsvService
-      .ImportFromCsv(PathToCsv)
+    var importResult = await _importFromCsvService.ImportFromCsv(PathToCsv);
+    
+    return importResult
       .ValidObjects
       .DistinctBy(flight => flight.Id);
   }
-
-  public IEnumerable<Flight> GetMatchingCriteria(FlightSearchCriteria criteria)
+  
+  public async Task<IEnumerable<Flight>> GetMatchingCriteria(FlightSearchCriteria criteria)
   {
-    return GetAll()
+    var allFlights = await GetAll();
+    
+    return allFlights
       .Where(criteria.Matches);
   }
-
-  public Flight? GetById(int id)
+  
+  public async Task<Flight?> GetById(int id)
   {
-    return GetAll()
-      .FirstOrDefault(flight => flight.Id == id);
+    var allFlights = await GetAll();
+    
+    return allFlights.FirstOrDefault(flight => flight.Id == id);
   }
-
-  public void Add(IEnumerable<Flight> flights)
-  {
-    _writer.Append(flights);
+  
+  public async Task Add(IEnumerable<Flight> flights)
+  {  
+    await _writer.AppendAsync(PathToCsv, flights);
   }
 }

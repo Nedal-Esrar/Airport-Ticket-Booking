@@ -9,69 +9,76 @@ namespace DataAccess.Repositories.Implementations;
 
 public class CsvBookingRepository : IBookingRepository
 {
-  private const string PathToCsv = "../../../../DataAccess/CsvFiles/bookings.csv";
-
+  public readonly string PathToCsv = "../../../../DataAccess/CsvFiles/bookings.csv";
+  
   private readonly IImportFromCsvService<BookingCsvImportDto, Booking> _importFromCsvService;
-
-  private readonly CsvWriter<Booking> _writer;
-
-  public CsvBookingRepository(IImportFromCsvService<BookingCsvImportDto, Booking> importFromCsvService)
+  
+  private readonly ICsvWriter _writer;
+  
+  public CsvBookingRepository(IImportFromCsvService<BookingCsvImportDto, Booking> importFromCsvService, ICsvWriter writer)
   {
     _importFromCsvService = importFromCsvService;
 
-    _writer = new CsvWriter<Booking>(PathToCsv);
+    _writer = writer;
   }
-
-  public IEnumerable<Booking> GetAll()
+  
+  public async Task<IEnumerable<Booking>> GetAll()
   {
-    return _importFromCsvService
-      .ImportFromCsv(PathToCsv)
+    var allBookings = await _importFromCsvService.ImportFromCsv(PathToCsv);
+    
+    return allBookings
       .ValidObjects
       .DistinctBy(booking => booking.Id);
   }
-
-  public void Add(Booking booking)
+  
+  public async Task Add(Booking booking)
   {
-    _writer.Append(booking);
+    await _writer.AppendAsync(PathToCsv, booking);
   }
-
-  public void Remove(Booking booking)
+  
+  public async Task Remove(Booking booking)
   {
-    _writer.Write(
-      GetAll()
-        .Where(bookingToExamine => bookingToExamine.Id != booking.Id)
-    );
+    var allBookings = await GetAll();
+
+    await _writer.WriteAsync(PathToCsv,  allBookings.Where(bookingToExamine => bookingToExamine.Id != booking.Id));
   }
-
-  public Booking? GetById(int id)
+  
+  public async Task<Booking?> GetById(int id)
   {
-    return GetAll()
+    var allBookings = await GetAll();
+      
+    return allBookings
       .FirstOrDefault(booking => booking.Id == id);
   }
-
-  public void Update(Booking booking)
+  
+  public async Task Update(Booking booking)
   {
-    _writer.Write(
-      GetAll()
-        .Select(bookingToSelect => bookingToSelect.Id == booking.Id ? booking : bookingToSelect)
-    );
+    var allBookings = await GetAll();
+
+    await _writer.WriteAsync(PathToCsv,  
+      allBookings.Select(bookingToSelect => bookingToSelect.Id == booking.Id ? booking : bookingToSelect));
   }
-
-  public IEnumerable<Booking> GetPassengerBookings(int passengerId)
+  
+  public async Task<IEnumerable<Booking>> GetPassengerBookings(int passengerId)
   {
-    return GetAll()
+    var allBookings = await GetAll();
+    
+    return allBookings
       .Where(booking => booking.Passenger.Id == passengerId);
   }
-
-  public IEnumerable<Booking> GetBookingsForFlightWithClass(int flightId, FlightClass flightClass)
+  
+  public async Task<IEnumerable<Booking>> GetBookingsForFlightWithClass(int flightId, FlightClass flightClass)
   {
-    return GetAll()
+    var allBookings = await GetAll();
+    
+    return allBookings
       .Where(booking => booking.Flight.Id == flightId && booking.BookingClass == flightClass);
   }
-
-  public IEnumerable<Booking> GetMatchingCriteria(BookingSearchCriteria criteria)
+  
+  public async Task<IEnumerable<Booking>> GetMatchingCriteria(BookingSearchCriteria criteria)
   {
-    return GetAll()
-      .Where(criteria.Matches);
+    var allBookings = await GetAll();
+    
+    return allBookings.Where(criteria.Matches);
   }
 }

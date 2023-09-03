@@ -7,19 +7,20 @@ namespace DataAccess.Repositories.Implementations;
 
 public class CsvPassengerRepository : IPassengerRepository
 {
-  private const string PathToCsv = "../../../../DataAccess/CsvFiles/passengers.csv";
-
+  public readonly string PathToCsv = "../../../../DataAccess/CsvFiles/passengers.csv";
+  
   private readonly IImportFromCsvService<PassengerCsvImportDto, Passenger> _importFromCsvService;
-
+  
   public CsvPassengerRepository(IImportFromCsvService<PassengerCsvImportDto, Passenger> importFromCsvService)
   {
     _importFromCsvService = importFromCsvService;
   }
   
-  public Passenger? GetById(int id)
+  public async Task<Passenger?> GetById(int id)
   {
-    return _importFromCsvService
-      .ImportFromCsv(PathToCsv)
+    var importResult = await _importFromCsvService.ImportFromCsv(PathToCsv);
+
+    return importResult
       .ValidObjects
       .DistinctBy(passenger => passenger.Id)
       .FirstOrDefault(passenger => passenger.Id == id);
