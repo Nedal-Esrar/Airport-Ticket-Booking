@@ -1,3 +1,4 @@
+using DataAccess.Csv.Dtos;
 using DataAccess.Csv.Mappers;
 using DataAccess.Csv.Parsers;
 using DataAccess.Csv.Validators;
@@ -7,24 +8,29 @@ namespace DataAccess.Csv.CsvImportService;
 
 public class ImportFromCsvService<TInput, TOutput> : IImportFromCsvService<TInput, TOutput>
 {
+  private readonly IMapper<TInput, TOutput> _mapper;
+  
   private readonly IParser<TInput> _parser;
+
+  private readonly ICsvReader _reader;
 
   private readonly IValidator _validator;
 
-  private readonly IMapper<TInput, TOutput> _mapper;
-
-  public ImportFromCsvService(IParser<TInput> parser, IValidator validator, IMapper<TInput, TOutput> mapper)
+  public ImportFromCsvService(IParser<TInput> parser, IValidator validator, IMapper<TInput, TOutput> mapper,
+    ICsvReader reader)
   {
     _parser = parser;
+    
     _validator = validator;
+    
     _mapper = mapper;
+    
+    _reader = reader;
   }
 
   public async Task<DataImportResult<TOutput>> ImportFromCsv(string filePath)
   {
-    var reader = new CsvReader<TInput>(filePath);
-
-    var readObjects = await reader.ReadAsync(_parser.Parse);
+    var readObjects = await _reader.ReadAsync(filePath, _parser);
 
     var validObjects = new List<TOutput>();
 
@@ -39,7 +45,7 @@ public class ImportFromCsvService<TInput, TOutput> : IImportFromCsvService<TInpu
         try
         {
           var objectToAdd = _mapper.Map(readObject);
-          
+
           validObjects.Add(objectToAdd);
         }
         catch (Exception exception)
