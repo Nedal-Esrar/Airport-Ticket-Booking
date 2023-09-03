@@ -1,24 +1,19 @@
+using DataAccess.Csv.Parsers;
+using DataAccess.Exceptions;
+
 namespace DataAccess.Csv;
 
-public class CsvReader<T>
+public class CsvReader : ICsvReader
 {
-  private readonly string _pathToFile;
-
-  public CsvReader(string pathToFile)
+  public async Task<List<T?>> ReadAsync<T>(string pathToFile, IParser<T> parser)
   {
-    _pathToFile = pathToFile;
-  }
-  
-  public async Task<List<T?>> ReadAsync(Func<string[], T> parseFunc)
-  {
-    var readObjects = new List<T?>();
+    ValidateCsvFile(pathToFile);
     
-    using var reader = new StreamReader(_pathToFile);
+    var readObjects = new List<T?>();
 
-    if (reader.EndOfStream)
-    {
-      return readObjects;
-    }
+    using var reader = new StreamReader(pathToFile);
+
+    if (reader.EndOfStream) return readObjects;
 
     await reader.ReadLineAsync(); // skip the header
 
@@ -28,38 +23,24 @@ public class CsvReader<T>
 
       var fields = line?.Split(',');
 
-      var instance = parseFunc(fields);
-      
+      var instance = parser.Parse(fields);
+
       readObjects.Add(instance);
     }
-
+  
     return readObjects;
   }
-
-  public List<T?> Read(Func<string[], T> parseFunc)
+  
+  private void ValidateCsvFile(string pathToFile)
   {
-    var readObjects = new List<T?>();
-    
-    using var reader = new StreamReader(_pathToFile);
-
-    if (reader.EndOfStream)
+    if (!File.Exists(pathToFile))
     {
-      return readObjects;
+      throw new FileNotFoundException();
     }
 
-    reader.ReadLine(); // skip the header
-
-    while (!reader.EndOfStream)
+    if (Path.GetExtension(pathToFile) != ".csv")
     {
-      var line = reader.ReadLine();
-
-      var fields = line?.Split(',');
-
-      var instance = parseFunc(fields);
-      
-      readObjects.Add(instance);
+      throw new NotACsvFileException(pathToFile);
     }
-
-    return readObjects;
   }
 }
