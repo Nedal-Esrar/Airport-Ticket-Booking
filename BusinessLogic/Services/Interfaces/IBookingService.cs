@@ -1,20 +1,20 @@
 using BusinessLogic.PresentationLayerDtos;
-using DataAccessLayer.Models;
-using DataAccessLayer.SearchCriteria;
+using DataAccess.Models;
+using DataAccess.SearchCriteria;
 
 namespace BusinessLogic.Services.Interfaces;
 
 public interface IBookingService
 {
-  BookingDto? GetById(int id);
+  Task<BookingDto?> GetById(int id);
   
-  bool BookFlight(int flightId, int passengerId, FlightClass flightClass);
+  Task<bool> BookFlight(int flightId, int passengerId, FlightClass flightClass);
 
-  void CancelBooking(int bookingId);
+  Task CancelBooking(int bookingId);
 
-  bool ModifyBooking(int bookingId, FlightClass newClass);
+  Task<bool> ModifyBooking(int bookingId, FlightClass newClass);
 
-  IEnumerable<BookingDto> GetPassengerBookings(int passengerId);
+  Task<IEnumerable<BookingDto>> GetPassengerBookings(int passengerId);
 
-  IEnumerable<BookingDto> GetBookingsMatchingCriteria(BookingSearchCriteria criteria);
+  Task<IEnumerable<BookingDto>> GetBookingsMatchingCriteria(BookingSearchCriteria criteria);
 }
