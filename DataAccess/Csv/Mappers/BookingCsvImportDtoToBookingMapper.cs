@@ -18,11 +18,16 @@ public class BookingCsvImportDtoToBookingMapper : IMapper<BookingCsvImportDto, B
     _passengerRepository = passengerRepository;
   }
 
-  public Booking? Map(BookingCsvImportDto toMap)
+  public Booking? Map(BookingCsvImportDto? toMap)
   {
-    var bookingPassenger = _passengerRepository.GetById(toMap.PassengerId.Value);
+    if (toMap is null)
+    {
+      return null;
+    }
+    
+    var bookingPassenger = _passengerRepository.GetById(toMap.PassengerId.Value).Result;
 
-    var bookingFlight = _flightRepository.GetById(toMap.FlightId.Value);
+    var bookingFlight = _flightRepository.GetById(toMap.PassengerId.Value).Result;
 
     if (bookingFlight is null || bookingPassenger is null)
     {

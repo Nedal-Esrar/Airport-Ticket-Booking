@@ -5,8 +5,13 @@ namespace DataAccess.Csv.Mappers;
 
 public class FlightCsvImportDtoToFlightMapper : IMapper<FlightCsvImportDto, Flight>
 {
-  public Flight? Map(FlightCsvImportDto dto)
+  public Flight? Map(FlightCsvImportDto? dto)
   {
+    if (dto is null)
+    {
+      return null;
+    }
+    
     var flightClassDetails = dto.Classes
       .Select(classDetailsDto => new FlightClassDetails
       {
