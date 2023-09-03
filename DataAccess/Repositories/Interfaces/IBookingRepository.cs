@@ -5,19 +5,19 @@ namespace DataAccess.Repositories.Interfaces;
 
 public interface IBookingRepository
 {
-  IEnumerable<Booking> GetAll();
+  Task<IEnumerable<Booking>> GetAll();
 
-  void Add(Booking booking);
+  Task Add(Booking booking);
 
-  void Remove(Booking booking);
+  Task Remove(Booking booking);
 
-  Booking? GetById(int id);
+  Task<Booking?> GetById(int id);
 
-  void Update(Booking booking);
+  Task Update(Booking booking);
 
-  IEnumerable<Booking> GetPassengerBookings(int passengerId);
+  Task<IEnumerable<Booking>> GetPassengerBookings(int passengerId);
   
-  IEnumerable<Booking> GetBookingsForFlightWithClass(int flightId, FlightClass flightClass);
+  Task<IEnumerable<Booking>> GetBookingsForFlightWithClass(int flightId, FlightClass flightClass);
 
-  IEnumerable<Booking> GetMatchingCriteria(BookingSearchCriteria criteria);
+  Task<IEnumerable<Booking>> GetMatchingCriteria(BookingSearchCriteria criteria);
 }

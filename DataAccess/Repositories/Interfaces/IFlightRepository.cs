@@ -5,11 +5,11 @@ namespace DataAccess.Repositories.Interfaces;
 
 public interface IFlightRepository
 {
-  IEnumerable<Flight> GetAll();
+  Task<IEnumerable<Flight>> GetAll();
 
-  IEnumerable<Flight> GetMatchingCriteria(FlightSearchCriteria criteria);
+  Task<IEnumerable<Flight>> GetMatchingCriteria(FlightSearchCriteria criteria);
 
-  Flight? GetById(int id);
+  Task<Flight?> GetById(int id);
 
-  void Add(IEnumerable<Flight> flights);
+  Task Add(IEnumerable<Flight> flights);
 }
