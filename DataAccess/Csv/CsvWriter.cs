@@ -1,29 +1,16 @@
+using DataAccess.Exceptions;
+
 namespace DataAccess.Csv;
 
-public class CsvWriter<T> where T : ICsvWritable
+public class CsvWriter : ICsvWriter
 {
-  private readonly string _pathToFile;
-
-  public CsvWriter(string pathToFile)
+  public async Task WriteAsync<T>(string pathToFile, IEnumerable<T> objects) where T : ICsvWritable
   {
-    _pathToFile = pathToFile;
-  }
-
-  public void Write(IEnumerable<T> objects)
-  {
-    using var writer = new StreamWriter(_pathToFile);
+    ValidateCsvFile(pathToFile);
     
-    writer.WriteLine(T.GetHeader());
+    await using var writer = new StreamWriter(pathToFile);
 
-    foreach (var obj in objects)
-    {
-      writer.WriteLine(obj.GetCsvRecord());
-    }
-  }
-
-  public async Task WriteAsync(IEnumerable<T> objects)
-  {
-    await using var writer = new StreamWriter(_pathToFile);
+    await writer.WriteLineAsync(T.GetHeader());
     
     foreach (var obj in objects)
     {
@@ -31,26 +18,11 @@ public class CsvWriter<T> where T : ICsvWritable
     }
   }
 
-  public void Append(IEnumerable<T> objects)
+  public async Task AppendAsync<T>(string pathToFile, IEnumerable<T> objects) where T : ICsvWritable
   {
-    using var writer = new StreamWriter(_pathToFile, true);
-
-    foreach (var obj in objects)
-    {
-      writer.WriteLine(obj.GetCsvRecord());
-    }
-  }
-  
-  public void Append(T obj)
-  {
-    using var writer = new StreamWriter(_pathToFile, true);
+    ValidateCsvFile(pathToFile);
     
-    writer.WriteLine(obj.GetCsvRecord());
-  }
-
-  public async Task AppendAsync(IEnumerable<T> objects)
-  {
-    await using var writer = new StreamWriter(_pathToFile, true);
+    await using var writer = new StreamWriter(pathToFile, true);
     
     foreach (var obj in objects)
     {
@@ -58,10 +30,25 @@ public class CsvWriter<T> where T : ICsvWritable
     }
   }
   
-  public async Task AppendAsync(T obj)
+  public async Task AppendAsync<T>(string pathToFile, T obj) where T : ICsvWritable
   {
-    await using var writer = new StreamWriter(_pathToFile, true);
+    ValidateCsvFile(pathToFile);
+    
+    await using var writer = new StreamWriter(pathToFile, true);
     
     await writer.WriteLineAsync(obj.GetCsvRecord());
+  }
+  
+  private void ValidateCsvFile(string pathToFile)
+  {
+    if (!File.Exists(pathToFile))
+    {
+      throw new FileNotFoundException();
+    }
+
+    if (Path.GetExtension(pathToFile) != ".csv")
+    {
+      throw new NotACsvFileException(pathToFile);
+    }
   }
 }
