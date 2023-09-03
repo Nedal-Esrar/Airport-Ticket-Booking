@@ -6,6 +6,9 @@ public static class ValidationMessages
   
   public const string ObjectIntegrityError = "Data integrity is not applicable to this object";
 
+  public static string GenerateNotACsvFileMessage(string filePath) =>
+    $"The Provided ${filePath} is not a CSV file.";
+
   public static string GenerateLineIndicatorMessage(int lineNumber) =>
     $"In line {lineNumber}:";
 
