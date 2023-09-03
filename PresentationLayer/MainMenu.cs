@@ -26,7 +26,7 @@ public class MainMenu
     };
   }
 
-  public void Run()
+  public async Task Run()
   {
     Console.WriteLine(GeneralMessages.Welcome);
 
@@ -46,10 +46,14 @@ public class MainMenu
         continue;
       }
 
-      if (_factories.TryGetValue(choice, out var factory))
+      if (!_factories.TryGetValue(choice, out var factory))
       {
-        factory.Create()?.Display();
+        continue;
       }
+      
+      var requestedInterface = await factory.Create();
+      
+      requestedInterface?.Display();
     }
     
     Console.WriteLine(GeneralMessages.ExitMessage);

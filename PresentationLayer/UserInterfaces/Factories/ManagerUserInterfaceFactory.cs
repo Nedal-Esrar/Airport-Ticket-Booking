@@ -16,10 +16,10 @@ public class ManagerInterfaceFactory : IUserInterfaceFactory
     _flightService = flightService;
   }
   
-  public IUserInterface? Create()
+  public Task<IUserInterface?> Create()
   {
     var invoker = new ManagerCommandInvoker(_bookingService, _flightService);
 
-    return new ManagerInterface(invoker);
+    return Task.FromResult<IUserInterface?>(new ManagerInterface(invoker));
   }
 }

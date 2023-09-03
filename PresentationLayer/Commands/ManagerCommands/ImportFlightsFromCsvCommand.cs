@@ -13,36 +13,29 @@ public class ImportFlightsFromCsvCommand : ICommand
     _flightService = flightService;
   }
 
-  public void Execute()
+  public async Task Execute()
   {
     Console.WriteLine(FileImportMessages.EnterFilePath);
 
     var filePath = InputParser.GetInput<string>(InputPrompts.FilePathPrompt,
       ParseFunctionsWithoutSkip.TryParseString);
 
-    if (!File.Exists(filePath))
+    try
     {
-      Console.WriteLine(FileImportMessages.FileNotFound);
-    
-      return;
-    }
+      var errorMessages = await _flightService.ImportFromCsv(filePath);
 
-    if (Path.GetExtension(filePath) != ".csv")
-    {
-      Console.WriteLine(FileImportMessages.NotACsvFile);
-      
-      return;
+      if (errorMessages.Any())
+      {
+        DisplayErrorMessages(errorMessages);
+      }
+      else
+      {
+        Console.WriteLine(FileImportMessages.SuccessImport);
+      }
     }
-
-    var errorMessages = _flightService.ImportFromCsv(filePath);
-
-    if (errorMessages.Any())
+    catch (Exception exception)
     {
-      DisplayErrorMessages(errorMessages);
-    }
-    else
-    {
-      Console.WriteLine(FileImportMessages.SuccessImport);
+      Console.WriteLine(exception.Message);
     }
   }
 

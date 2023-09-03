@@ -18,14 +18,14 @@ public class CancelBookingCommand : ICommand
     _passenger = passenger;
   }
   
-  public void Execute()
+  public async Task Execute()
   {
     Console.WriteLine(BookingMessages.EnterBookingId);
     
     var bookingId = InputParser.GetInput<int>(InputPrompts.BookingIdPromptWithoutSkip,
       ParseFunctionsWithoutSkip.TryParseId);
 
-    var booking = _bookingService.GetById(bookingId);
+    var booking = await _bookingService.GetById(bookingId);
 
     if (booking == null)
     {
@@ -34,9 +34,9 @@ public class CancelBookingCommand : ICommand
       return;
     }
 
-    var doesBookingBelongToPassenger = _bookingService
-      .GetPassengerBookings(_passenger.Id)
-      .Any(booking => booking.Passenger.Id == _passenger.Id);
+    var passengerBookings = await _bookingService.GetPassengerBookings(_passenger.Id);
+
+    var doesBookingBelongToPassenger = passengerBookings.Any(booking => booking.Passenger.Id == _passenger.Id);
 
     if (!doesBookingBelongToPassenger)
     {
@@ -45,7 +45,7 @@ public class CancelBookingCommand : ICommand
       return;
     }
     
-    _bookingService.CancelBooking(bookingId);
+    await _bookingService.CancelBooking(bookingId);
     
     Console.WriteLine(BookingMessages.SuccessfulBookingCancellation);
   }

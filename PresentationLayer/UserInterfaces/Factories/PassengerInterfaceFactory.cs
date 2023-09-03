@@ -25,12 +25,12 @@ public class PassengerInterfaceFactory : IUserInterfaceFactory
     _passengerService = passengerService;
   }
   
-  public IUserInterface? Create()
+  public async Task<IUserInterface?> Create()
   {
     var passengerId = InputParser.GetInput<int>(InputPrompts.PassengerIdPromptWithoutSkip,
       ParseFunctionsWithoutSkip.TryParseId);
 
-    var passenger = _passengerService.GetById(passengerId);
+    var passenger = await _passengerService.GetById(passengerId);
 
     if (passenger == null)
     {

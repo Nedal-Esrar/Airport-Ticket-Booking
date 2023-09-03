@@ -23,11 +23,11 @@ public class PassengerCommandInvoker : ICommandInvoker
     };
   }
   
-  public void Invoke(int choice)
+  public async Task Invoke(int choice)
   {
     if (_commands.TryGetValue((PassengerChoice) choice, out var command))
     {
-      command.Execute();
+      await command.Execute();
     }
     else
     {

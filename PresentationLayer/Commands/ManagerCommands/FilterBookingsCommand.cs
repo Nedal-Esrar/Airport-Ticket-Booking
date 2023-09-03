@@ -1,7 +1,7 @@
 using BusinessLogic.PresentationLayerDtos;
 using BusinessLogic.Services.Interfaces;
-using DataAccessLayer.Models;
-using DataAccessLayer.SearchCriteria;
+using DataAccess.Models;
+using DataAccess.SearchCriteria;
 using PresentationLayer.DisplayUtilities;
 using PresentationLayer.InputUtilities;
 
@@ -16,13 +16,13 @@ public class FilterBookingsCommand : ICommand
     _bookingService = bookingService;
   }
   
-  public void Execute()
+  public async Task Execute()
   {
     Console.WriteLine(BookingMessages.EnterBookingSearchCriteria);
 
     var criteria = BuildBookingSearchCriteria();
 
-    var availableFlightsMatchingCriteria = _bookingService.GetBookingsMatchingCriteria(criteria);
+    var availableFlightsMatchingCriteria = await _bookingService.GetBookingsMatchingCriteria(criteria);
 
     if (availableFlightsMatchingCriteria.Any())
     {
