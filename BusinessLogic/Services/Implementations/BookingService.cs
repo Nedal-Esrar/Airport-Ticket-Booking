@@ -1,8 +1,12 @@
 using BusinessLogic.PresentationLayerDtos;
+using BusinessLogic.Services.DateTimeProvider;
 using BusinessLogic.Services.Interfaces;
-using DataAccessLayer.Models;
-using DataAccessLayer.Repositories.Interfaces;
-using DataAccessLayer.SearchCriteria;
+using BusinessLogic.Utilites;
+using DataAccess.Csv.Dtos;
+using DataAccess.Csv.Mappers;
+using DataAccess.Models;
+using DataAccess.Repositories.Interfaces;
+using DataAccess.SearchCriteria;
 
 namespace BusinessLogic.Services.Implementations;
 
@@ -14,135 +18,137 @@ public class BookingService : IBookingService
 
   private readonly IPassengerRepository _passengerRepository;
 
+  private readonly IMapper<Booking, BookingDto> _bookingMapper;
+
+  private readonly IDateTimeProvider _dateTimeProvider;
 
   public BookingService(
     IBookingRepository bookingRepository, 
     IFlightRepository flightRepository, 
-    IPassengerRepository passengerRepository)
+    IPassengerRepository passengerRepository, 
+    IMapper<Booking, BookingDto> bookingMapper,
+    IDateTimeProvider dateTimeProvider)
   {
     _bookingRepository = bookingRepository;
     _flightRepository = flightRepository;
     _passengerRepository = passengerRepository;
+    _bookingMapper = bookingMapper;
+    _dateTimeProvider = dateTimeProvider;
   }
   
 
-  public BookingDto? GetById(int id)
+  public async Task<BookingDto?> GetById(int id)
   {
-    var booking = _bookingRepository.GetById(id);
+    var booking = await _bookingRepository.GetById(id);
 
-    return booking == null ? null : new BookingDto(booking);
+    return _bookingMapper.Map(booking);
   }
 
-  public bool BookFlight(int flightId, int passengerId, FlightClass flightClass)
+  public async Task<bool> BookFlight(int flightId, int passengerId, FlightClass flightClass)
   {
-    var flight = _flightRepository.GetById(flightId);
+    var flight = await _flightRepository.GetById(flightId);
 
-    if (flight == null)
+    if (flight is null)
     {
       return false;
     }
     
-    if (!IsClassAvailableToBook(flight, flightClass))
-    {
-      return false;
-    }
-
-    var passenger = _passengerRepository.GetById(passengerId);
-
-    if (passenger == null)
+    if (!flight.Classes.Any(details => details.Class == flightClass))
     {
       return false;
     }
     
-    var bookingToAdd = CreateBooking(flight, passenger, flightClass);
+    if (!await IsClassAvailableToBook(flight, flightClass))
+    {
+      return false;
+    }
 
-    _bookingRepository.Add(bookingToAdd);
+    var passenger = await _passengerRepository.GetById(passengerId);
+
+    if (passenger is null)
+    {
+      return false;
+    }
+    
+    var bookingToAdd = await CreateBooking(flight, passenger, flightClass);
+
+    await _bookingRepository.Add(bookingToAdd);
 
     return true;
   }
-
-  private Booking CreateBooking(Flight flight, Passenger passenger, FlightClass flightClass)
+  
+  private async Task<bool> IsClassAvailableToBook(Flight flight, FlightClass flightClass)
   {
-    var bookings = _bookingRepository.GetAll();
+    return await FlightUtilities.IsClassAvailableToBook(flight, flightClass, _bookingRepository);
+  }
 
-    var id = bookings.Any()
-      ? bookings.Max(booking => booking.Id) + 1
+  private async Task<Booking> CreateBooking(Flight flight, Passenger passenger, FlightClass flightClass)
+  {
+    var allBookings = await _bookingRepository.GetAll();
+
+    var id = allBookings.Any()
+      ? allBookings.Max(booking => booking.Id) + 1
       : 1;
-
+      
     return new Booking
     {
       Id = id,
       Flight = flight,
       Passenger = passenger,
       BookingClass = flightClass,
-      BookingDate = DateTime.Now
+      BookingDate = _dateTimeProvider.GetCurrentDateTime()
     };
   }
 
-  public void CancelBooking(int bookingId)
+  public async Task CancelBooking(int bookingId)
   {
-    var bookingToCancel = _bookingRepository.GetById(bookingId);
+    var bookingToCancel = await _bookingRepository.GetById(bookingId);
 
-    if (bookingToCancel == null)
+    if (bookingToCancel is null)
     {
       return;
     }
 
-    _bookingRepository.Remove(bookingToCancel);
+    await _bookingRepository.Remove(bookingToCancel);
   }
 
-  public bool ModifyBooking(int bookingId, FlightClass newClass)
+  public async Task<bool> ModifyBooking(int bookingId, FlightClass newClass)
   {
-    var booking = _bookingRepository.GetById(bookingId);
+    var booking = await _bookingRepository.GetById(bookingId);
 
     if (booking is null)
     {
       return false;
     }
 
-    if (booking.Flight.Classes.All(details => details.Class != newClass))
+    if (!booking.Flight.Classes.Any(details => details.Class == newClass))
     {
       return false;
     }
 
-    if (!IsClassAvailableToBook(booking.Flight, newClass))
+    if (!await IsClassAvailableToBook(booking.Flight, newClass))
     {
       return false;
     }
     
     booking.BookingClass = newClass;
       
-    _bookingRepository.Update(booking);
+    await _bookingRepository.Update(booking);
 
     return true;
-
   }
 
-  private bool IsClassAvailableToBook(Flight bookingFlight, FlightClass newClass)
+  public async Task<IEnumerable<BookingDto>> GetPassengerBookings(int passengerId)
   {
-    var capacity = bookingFlight
-      .Classes
-      .First(details => details.Class == newClass)
-      .Capacity;
-
-    var bookedSeats = _bookingRepository
-      .GetBookingsForFlightWithClass(bookingFlight.Id, newClass)
-      .Count();
-
-    return capacity - bookedSeats > 0;
+    var passengerBookings = await _bookingRepository.GetPassengerBookings(passengerId);
+    
+    return passengerBookings.Select(booking => _bookingMapper.Map(booking));
   }
 
-  public IEnumerable<BookingDto> GetPassengerBookings(int passengerId)
+  public async Task<IEnumerable<BookingDto>> GetBookingsMatchingCriteria(BookingSearchCriteria criteria)
   {
-    return _bookingRepository
-      .GetPassengerBookings(passengerId)
-      .Select(booking => new BookingDto(booking));
-  }
-
-  public IEnumerable<BookingDto> GetBookingsMatchingCriteria(BookingSearchCriteria criteria)
-  {
-    return _bookingRepository
-      .GetMatchingCriteria(criteria)
-      .Select(booking => new BookingDto(booking));;
+    var bookingsMatchingCriteria = await _bookingRepository.GetMatchingCriteria(criteria);
+    
+    return bookingsMatchingCriteria.Select(booking => _bookingMapper.Map(booking));
   }
 }
